@@ -149,10 +149,11 @@ export default function LmMoziStep2() {
           <h2>Want to Scale Your Sales Operations to 7-Figures With AI?</h2>
 
           <iframe
-            src="https://crm-api.clicktoclose.ai/widget/booking/eFI5SZtk9s3sTKnDuMwI"
-            style={{ width: '100%', minHeight: '800px', border: 'none', overflow: 'hidden', display: 'block' }}
+            src="https://crm-api.clicktoclose.ai/widget/survey/XBYG8uwEJU8qvYzbnwX8"
+            style={{ border: 'none', width: '100%', display: 'block' }}
             scrolling="no"
-            id="eFI5SZtk9s3sTKnDuMwI_1774631483781"
+            id="XBYG8uwEJU8qvYzbnwX8"
+            title="survey"
           />
         </section>
 
