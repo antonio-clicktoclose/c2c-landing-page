@@ -491,6 +491,47 @@ const TC = ({ d }) => (
 );
 const c1 = ts.slice(0, 3), c2 = ts.slice(3, 6), c3 = ts.slice(6, 9);
 
+const videoTestimonials = [
+  { file: "Matt McIntyre Testimonials .mp4", name: "Matt McIntyre", company: "Dir. of Marketing, VShred", quote: '"We owe a lot of our success to him."', t: "0.1" },
+  { file: "Micah Golden Grant Testimonial.mp4", name: "Micah Golden Grant", company: "Sales Manager, Commission Hero", quote: '"Antonio is a sorcerer!"', t: "0.1" },
+  { file: "Mike Sadikian Testimonial.mp4", name: "Mike Sadikian", company: "Dir. of Sales, Closers Network", quote: '"It will change your entire business!"', t: "0.1" },
+  { file: "Richard Mugica Testimonial  (2).mp4", name: "Richard Mugica", company: "CEO, 1CallClosers", quote: '"We were stuck at 30 closers - now we have 230."', t: "0.1" },
+  { file: "AI Edits from Trish Chan Testimonial.mp4", name: "Trish Chan", company: "COO, Commission Hero", quote: '"Reduced onboarding from several weeks to just a few days."', t: "1.0" },
+];
+
+const VideoTestimonials = () => (
+  <section style={{ padding: "80px 0" }}>
+    <W>
+      <div style={{ textAlign: "center", marginBottom: 48 }}>
+        <Badge icon={Icons.play({ size: 14, color: C.primary })}>Success Stories</Badge>
+        <H2>Watch our top clients scale</H2>
+        <Desc style={{ margin: "0 auto" }}>Hear directly from the sales leaders who have transformed their operations with ClickToClose.</Desc>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 24, justifyContent: "center" }}>
+        {videoTestimonials.map((v, i) => (
+          <div key={i} style={{ background: C.card, borderRadius: 16, border: `1px solid ${C.border}`, overflow: "hidden", boxShadow: "0 10px 30px rgba(0,0,0,0.5)", transition: "transform 0.2s", display: "flex", flexDirection: "column" }}
+            onMouseEnter={e => e.currentTarget.style.transform = "translateY(-4px)"}
+            onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}>
+            <video
+              controls
+              preload="metadata"
+              style={{ width: "100%", aspectRatio: "9/16", objectFit: "cover", backgroundColor: "#000", display: "block" }}
+              src={`/videos/${encodeURIComponent(v.file)}#t=${v.t}`}
+            />
+            <div style={{ padding: 20, flexGrow: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+              <div style={{ fontSize: 14, color: C.fgMuted, fontStyle: "italic", lineHeight: 1.5, marginBottom: 16 }}>{v.quote}</div>
+              <div>
+                <div style={{ fontSize: 16, fontWeight: 600, color: C.fg }}>{v.name}</div>
+                <div style={{ fontSize: 13, color: C.fgDim, marginTop: 4 }}>{v.company}</div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </W>
+  </section>
+);
+
 const Testimonials = () => (
   <section style={{ padding: "80px 0", overflow: "hidden" }}>
     <W><div style={{ textAlign: "center", marginBottom: 48 }}>
@@ -750,6 +791,7 @@ export default function C2CTrackerLanding() {
       <main>
         <Hero />
         <LogoCarousel />
+        <VideoTestimonials />
         <Testimonials />
         <About />
         <Features />
