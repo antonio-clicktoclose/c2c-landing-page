@@ -626,22 +626,42 @@ const FAQ = () => (
    ═══════════════════════════════════════ */
 const AnimatedDashboards = () => {
   const targetRef = useRef(null);
-  const { scrollYProgress } = useScroll({ target: targetRef, offset: ["start end", "end start"] });
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-85%"]);
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const [maxScroll, setMaxScroll] = useState(0);
+
+  useEffect(() => {
+    const measure = () => {
+      if (!sliderRef.current) return;
+      const distance = sliderRef.current.scrollWidth - window.innerWidth;
+      setMaxScroll(distance > 0 ? distance : 0);
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    const imgs = sliderRef.current?.querySelectorAll("img") ?? [];
+    imgs.forEach(img => img.addEventListener("load", measure));
+    return () => {
+      window.removeEventListener("resize", measure);
+      imgs.forEach(img => img.removeEventListener("load", measure));
+    };
+  }, []);
+
+  const { scrollYProgress } = useScroll({ target: targetRef, offset: ["start start", "end end"] });
+  const x = useTransform(scrollYProgress, [0, 1], [0, -maxScroll]);
+  const cardOpacity = useTransform(scrollYProgress, [0, 0.1, 0.25], [1, 1, 0]);
 
   return (
     <section ref={targetRef} style={{ position: "relative", height: "300vh", background: C.bg }}>
       <div style={{ position: "sticky", top: 0, height: "100vh", display: "flex", alignItems: "center", overflow: "hidden" }}>
 
-        <div className="mob-wt-text" style={{ width: "100%", display: "flex", justifyContent: "flex-start", paddingLeft: "10vw", flexShrink: 0, position: "absolute", zIndex: 10, left: 0, pointerEvents: "none" }}>
+        <motion.div className="mob-wt-text" style={{ width: "100%", display: "flex", justifyContent: "flex-start", paddingLeft: "10vw", flexShrink: 0, position: "absolute", zIndex: 10, left: 0, pointerEvents: "none", opacity: cardOpacity }}>
           <div style={{ maxWidth: 360, background: "rgba(10,10,12,0.65)", padding: 32, borderRadius: 16, backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", border: `1px solid ${C.border}` }}>
             <Badge icon={Icons.sparkles({ size: 14, color: C.primary })}>Platform Walkthrough</Badge>
             <H2 style={{ marginTop: 16, fontSize: "clamp(28px, 3vw, 36px)", lineHeight: 1.1 }}>See everything.<br />Miss nothing.</H2>
             <Desc style={{ marginBottom: 0 }}>A single source of truth for your entire revenue engine. From individual call coaching to executive forecasting.</Desc>
           </div>
-        </div>
+        </motion.div>
 
-        <motion.div className="mob-wt-slider" style={{ x, display: "flex", gap: "6vw", paddingLeft: "45vw", paddingRight: "10vw", alignItems: "center", height: "100%" }}>
+        <motion.div ref={sliderRef} className="mob-wt-slider" style={{ x, display: "flex", gap: "6vw", paddingLeft: "45vw", paddingRight: "10vw", alignItems: "center", height: "100%" }}>
           {dashboards.map((src, i) => (
             <div key={i} className="mob-wt-img" style={{ width: "65vw", maxWidth: 1000, flexShrink: 0, borderRadius: 16, overflow: "hidden", border: `1px solid ${C.border}`, boxShadow: "0 24px 64px rgba(0,0,0,0.6)", transition: "transform 0.3s ease, box-shadow 0.3s ease", cursor: "pointer" }}
               onMouseEnter={e => { e.currentTarget.style.transform = "scale(1.02) translateY(-10px)"; e.currentTarget.style.boxShadow = "0 32px 80px rgba(39,128,255,0.15)"; }}
@@ -659,28 +679,24 @@ const AnimatedDashboards = () => {
    11. CTA & QUIZ EMBED
    ═══════════════════════════════════════ */
 const QuizEmbed = () => {
-  const iframeRef = useRef<HTMLIFrameElement>(null);
-
   useEffect(() => {
-    const handleMessage = (e) => {
-      if (e.data && e.data.type === 'quiz-resize' && e.data.slug === 'market-disruptors-wealth-os') {
-        if (iframeRef.current) {
-          iframeRef.current.style.height = e.data.height + 'px';
-        }
-      }
+    const script = document.createElement('script');
+    script.src = 'https://crm-api.clicktoclose.ai/js/form_embed.js';
+    script.async = true;
+    document.body.appendChild(script);
+    return () => {
+      if (script.parentNode) script.parentNode.removeChild(script);
     };
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
   }, []);
 
   return (
-    <div id="quiz-embed-market-disruptors-wealth-os" style={{ position: "relative", zIndex: 50, width: "100%", maxWidth: 800, margin: "0 auto", marginTop: 40, background: "transparent", borderRadius: 16 }}>
+    <div style={{ position: "relative", zIndex: 50, width: "100%", maxWidth: 800, margin: "40px auto 0", background: "transparent", borderRadius: 16, overflow: "hidden" }}>
       <iframe
-        ref={iframeRef}
-        src="https://connect-via-quiz.lovable.app/embed/market-disruptors-wealth-os"
-        style={{ width: "100%", border: "none", overflow: "hidden", height: "800px", borderRadius: 16, background: "transparent", minHeight: "1200px" }}
-        scrolling="auto"
-        title="Quiz"
+        src="https://crm-api.clicktoclose.ai/widget/survey/XBYG8uwEJU8qvYzbnwX8"
+        style={{ border: "none", width: "100%", display: "block", minHeight: 1200 }}
+        scrolling="no"
+        id="XBYG8uwEJU8qvYzbnwX8"
+        title="survey"
       />
     </div>
   );
